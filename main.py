@@ -1,32 +1,61 @@
 from src.black_scholes import BlackScholes
+from src.binomial import BinomialTree
+from src.monte_carlo import MonteCarlo
 
 
 def main():
-    option = BlackScholes(
-        S=100,
-        K=100,
-        T=1,
-        r=0.05,
-        sigma=0.2
+
+    S = 100
+    K = 100
+    T = 1
+    r = 0.05
+    sigma = 0.2
+
+    bs = BlackScholes(S, K, T, r, sigma)
+
+    bt = BinomialTree(
+        S,
+        K,
+        T,
+        r,
+        sigma,
+        500
     )
 
-    print(f"Call Price : {option.call_price():.4f}")
-    print(f"Put Price  : {option.put_price():.4f}")
+    mc = MonteCarlo(
+        S,
+        K,
+        T,
+        r,
+        sigma,
+        100000
+    )
 
-    print()
+    print("="*60)
+    print("OPTION PRICING COMPARISON")
+    print("="*60)
 
-    print(f"Call Delta : {option.delta('call'):.4f}")
-    print(f"Put Delta  : {option.delta('put'):.4f}")
+    print(f"{'Method':<20}{'Call':>12}{'Put':>12}")
 
-    print(f"Gamma      : {option.gamma():.4f}")
-    print(f"Vega       : {option.vega():.4f}")
+    print("-"*44)
 
-    print(f"Call Theta : {option.theta('call'):.4f}")
-    print(f"Put Theta  : {option.theta('put'):.4f}")
+    print(
+        f"{'Black-Scholes':<20}"
+        f"{bs.call_price():>12.4f}"
+        f"{bs.put_price():>12.4f}"
+    )
 
-    print(f"Call Rho   : {option.rho('call'):.4f}")
-    print(f"Put Rho    : {option.rho('put'):.4f}")
+    print(
+        f"{'Binomial Tree':<20}"
+        f"{bt.price('call'):>12.4f}"
+        f"{bt.price('put'):>12.4f}"
+    )
 
+    print(
+        f"{'Monte Carlo':<20}"
+        f"{mc.price('call'):>12.4f}"
+        f"{mc.price('put'):>12.4f}"
+    )
 
 if __name__ == "__main__":
     main()
